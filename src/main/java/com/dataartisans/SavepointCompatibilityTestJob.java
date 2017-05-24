@@ -107,7 +107,7 @@ public class SavepointCompatibilityTestJob {
 
 		@Override
 		public String map(String s) throws Exception {
-			if (!wroteState.value()) {
+			if (wroteState.value() == null) {
 				wroteState.update(true);
 			}
 			stringsState.add(s);

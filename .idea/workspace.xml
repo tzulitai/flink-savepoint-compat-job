@@ -2,8 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="6ebee9ab-9f8f-4c58-8c14-7a1bdcf8c7e3" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/pom.xml" afterPath="$PROJECT_DIR$/pom.xml" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/java/com/dataartisans/SavepointCompatibilityTestJob.java" afterPath="$PROJECT_DIR$/src/main/java/com/dataartisans/SavepointCompatibilityTestJob.java" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -34,10 +32,10 @@
       <file leaf-file-name="SavepointCompatibilityTestJob.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/com/dataartisans/SavepointCompatibilityTestJob.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="498">
-              <caret line="81" column="18" lean-forward="false" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="18" />
+            <state relative-caret-position="552">
+              <caret line="109" column="45" lean-forward="true" selection-start-line="109" selection-start-column="45" selection-end-line="109" selection-end-column="45" />
               <folding>
-                <element signature="e#0#4586#0" expanded="true" />
+                <element signature="e#0#4593#0" expanded="true" />
                 <element signature="imports" expanded="true" />
                 <element signature="e#2877#2878#0" expanded="true" />
                 <element signature="e#2903#2904#0" expanded="true" />
@@ -578,10 +576,10 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/com/dataartisans/SavepointCompatibilityTestJob.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="498">
-          <caret line="81" column="18" lean-forward="false" selection-start-line="81" selection-start-column="18" selection-end-line="81" selection-end-column="18" />
+        <state relative-caret-position="552">
+          <caret line="109" column="45" lean-forward="true" selection-start-line="109" selection-start-column="45" selection-end-line="109" selection-end-column="45" />
           <folding>
-            <element signature="e#0#4586#0" expanded="true" />
+            <element signature="e#0#4593#0" expanded="true" />
             <element signature="imports" expanded="true" />
             <element signature="e#2877#2878#0" expanded="true" />
             <element signature="e#2903#2904#0" expanded="true" />
