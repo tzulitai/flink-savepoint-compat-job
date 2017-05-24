@@ -19,10 +19,13 @@
 package com.dataartisans;
 
 import org.apache.flink.api.common.functions.RichMapFunction;
+import org.apache.flink.api.common.state.ListState;
+import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
+import org.apache.flink.contrib.streaming.state.RocksDBStateBackend;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
 import org.apache.flink.streaming.api.functions.sink.DiscardingSink;
 import org.apache.flink.streaming.api.functions.source.SourceFunction;
@@ -38,6 +41,7 @@ public class SavepointCompatibilityTestJob {
 	public static void main(String[] args) throws Exception {
 		final StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
 		env.disableOperatorChaining();
+		env.setStateBackend(new RocksDBStateBackend("hdfs:///user/tzulitai/flink-savepoint-1.2"));
 
 		ParameterTool param = ParameterTool.fromArgs(args);
 
@@ -54,7 +58,7 @@ public class SavepointCompatibilityTestJob {
 			public void run(SourceContext<String> sourceContext) throws Exception {
 				while(running) {
 					sourceContext.collect(String.valueOf(value++));
-					Thread.sleep(100);
+					Thread.sleep(10);
 				}
 			}
 
@@ -63,13 +67,15 @@ public class SavepointCompatibilityTestJob {
 			}
 		}).addSink(new FlinkKafkaProducer09<String>("kafka09-kerberos-test", new SimpleStringSchema(), kafkaProps));
 
-		env.addSource(new FlinkKafkaConsumer09<String>("kafka09-kerberos-test", new SimpleStringSchema(), kafkaProps)).addSink(new DiscardingSink<String>());
+		env.addSource(new FlinkKafkaConsumer09<String>("kafka09-kerberos-test", new SimpleStringSchema(), kafkaProps))
+				.map(new EmptyStateMapper())
+				.map(new LargeStateMapper())
+				.addSink(new DiscardingSink<String>());
 
 		env.execute("Kafka 09 with Kerberos Test");
 	}
 
 	public static class EmptyStateMapper extends RichMapFunction<String, String> {
-
 
 		@Override
 		public String map(String s) throws Exception {
@@ -86,16 +92,21 @@ public class SavepointCompatibilityTestJob {
 	public static class LargeStateMapper extends RichMapFunction<String, String> {
 
 		private ValueState<Boolean> wroteState;
-		private ValueState
+		private ListState<String> stringsState;
 
 		@Override
 		public String map(String s) throws Exception {
-			return null;
+			if (!wroteState.value()) {
+				wroteState.update(true);
+			}
+			stringsState.add(s);
+			return s;
 		}
 
 		@Override
 		public void open(Configuration parameters) throws Exception {
 			wroteState = getRuntimeContext().getState(new ValueStateDescriptor<Boolean>("wroteState", Boolean.class));
+			stringsState = getRuntimeContext().getListState(new ListStateDescriptor<String>("stringsState", String.class));
 		}
 	}
 
