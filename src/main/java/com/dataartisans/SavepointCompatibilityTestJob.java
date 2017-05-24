@@ -23,6 +23,7 @@ import org.apache.flink.api.common.state.ListState;
 import org.apache.flink.api.common.state.ListStateDescriptor;
 import org.apache.flink.api.common.state.ValueState;
 import org.apache.flink.api.common.state.ValueStateDescriptor;
+import org.apache.flink.api.java.functions.KeySelector;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.configuration.Configuration;
 import org.apache.flink.contrib.streaming.state.RocksDBStateBackend;
@@ -68,7 +69,17 @@ public class SavepointCompatibilityTestJob {
 		}).addSink(new FlinkKafkaProducer09<String>("kafka09-kerberos-test", new SimpleStringSchema(), kafkaProps));
 
 		env.addSource(new FlinkKafkaConsumer09<String>("kafka09-kerberos-test", new SimpleStringSchema(), kafkaProps))
+				.keyBy(new KeySelector<String, Long>() {
+					public Long getKey(String s) throws Exception {
+						return Long.valueOf(s);
+					}
+				})
 				.map(new EmptyStateMapper())
+				.keyBy(new KeySelector<String, Long>() {
+					public Long getKey(String s) throws Exception {
+						return Long.valueOf(s);
+					}
+				})
 				.map(new LargeStateMapper())
 				.addSink(new DiscardingSink<String>());
 
